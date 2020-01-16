@@ -88,9 +88,13 @@ export class RedisQueue implements IQueue {
   }
 
   async clear(): Promise<void> {
-    await this.rsmq.deleteQueue({ qname: this.channel })
-    delete this.qchannels[this.channel]
+    try{
+      await this.rsmq.deleteQueue({ qname: this.channel })
+    }catch(e){
+    }
     console.log(`${this.channel} deleted`)
+    await this.create();
+    console.log(`${this.channel} cleared`)
   }
 
   async channels(): Promise<string[]>{

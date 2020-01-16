@@ -29,7 +29,7 @@ const QueueConfig = new QueueSdk(QTYPE.REDIS, url); // Qtypes : SIMPLE (in-mem) 
 const NEWQUEUE = QueueConfig.getQueue("READY");
 let message = "Message to be pushed into queue"
 
-await NEWQUEUE.clear(); // delete the queue
+await NEWQUEUE.clear(); // it will clear all messages of queue but  wil not delete the queue
 let mid = await NEWQUEUE.push(message) // push message into queue
 let size = await NEWQUEUE.size() // queue size
 await NEWQUEUE.pop() // pop from queue

@@ -4,7 +4,7 @@ const { QTYPE } =  require('../dist/Qtype')
 const url = "http://127.0.0.1:6379"
 
 const QueueConfig = new QueueSdk(QTYPE.REDIS, url);
-const NEWQUEUE = QueueConfig.getQueue("READY", 5); 
+const NEWQUEUE = QueueConfig.getQueue("READYMMMM", 5); 
 const RETRYQ = QueueConfig.getQueue("RETRYQ"); 
 const SUCCESSQ = QueueConfig.getQueue("SUCCESSQ"); 
 // the second param is delay (in seconds)
@@ -14,13 +14,8 @@ let body = "Message to be pushed into queue"
 
 const test = async () => {
   try{
-
-    try{
-      await NEWQUEUE.clear();
-    }catch(e){
-
-    }
     
+    await NEWQUEUE.clear();
     await RETRYQ.push(body)
     await SUCCESSQ.push(body)
   
