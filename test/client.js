@@ -20,7 +20,7 @@ const test = async () => {
     }catch(e){
 
     }
-
+    
     await RETRYQ.push(body)
     await SUCCESSQ.push(body)
   
@@ -47,7 +47,10 @@ const test = async () => {
     const channels = await NEWQUEUE.channels()
     console.log(JSON.stringify(channels))
 
-    await NEWQUEUE.list()
+    const messages = await NEWQUEUE.list()
+    console.log(messages)
+
+
   }catch(e){
     console.error(e)
   }

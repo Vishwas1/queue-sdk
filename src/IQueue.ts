@@ -3,7 +3,7 @@ export interface IQueue{
   pop(): Promise<any>;
   create(): Promise<void>;
   size(): Promise<number>;
-  list(): Promise<string[]>;
+  list(): Promise<any>;
   clear(): Promise<void>;
   channels(): Promise<string[]>;
 }

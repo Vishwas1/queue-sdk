@@ -12,8 +12,9 @@
   },
   "author": "Vishwas Anand Bhushan",
   "license": "MIT",
-  "dependencies": {
+  "dependencies": {    
     "node-fetch": "^2.6.0",
+    "redis": "^2.8.0",
     "rsmq-promise": "^1.0.4",
     "url": "^0.11.0"
   },

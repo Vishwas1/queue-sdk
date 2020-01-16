@@ -1,15 +1,17 @@
 import { IQueue } from '../../IQueue';
 import { Connection } from '../../conn/Connection'
 import * as RSMQPromise from 'rsmq-promise'
+import * as redis from 'redis';
 import { QTYPE } from '../../Qtype';
-
 export class RedisQueue implements IQueue {
   rsmq: RSMQPromise;
   qchannels: Object;
   channel: string;
   delay: number;
+  redisClient: redis.RedisClient;
   constructor(host: string, port: string, channel: string, delay: number = 0){
-    this.rsmq = Connection.get(host, port, QTYPE.REDIS)
+    this.rsmq = Connection.get(host, port, QTYPE.REDIS) 
+    this.redisClient = redis.createClient(Number(port), host);
     this.channel = channel;
     this.qchannels = {};
     this.delay = delay;
@@ -61,9 +63,28 @@ export class RedisQueue implements IQueue {
     return mAttr.msgs;
   }
 
-  async list(): Promise<string []>{
-    const queues: string [] = await this.rsmq.listQueues()
-    return queues
+  async list(): Promise<any>{
+    let messages = []
+    return new Promise(async (resolve, reject) => {
+      const searchKey = `rsmq:${this.channel}:Q`
+      this.redisClient.hgetall(searchKey, (err, obj) => {
+        if(err) reject([])
+        if(!obj) reject([])
+        if(Number(obj['totalsent']) == 0) reject([]);
+
+        const keys = Object.keys(obj);
+        const messageKeys = keys.filter(this.cb)
+        messageKeys.forEach((eachKey) => {          
+          messages.push(obj[eachKey])
+        })
+        resolve(messages);
+      });        
+    });
+  }
+
+  private cb (key:string) {
+    if(key == "vt" || key == "delay" || key == "created" || key == "modified" || key == "totalsent" || key == "maxsize") return;
+    return key
   }
 
   async clear(): Promise<void> {
