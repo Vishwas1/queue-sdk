@@ -61,11 +61,9 @@ export class RedisQueue implements IQueue {
     return mAttr.msgs;
   }
 
-  //TODO
-  list(): Promise<string []>{
-    return new Promise((resolve, reject) => {
-      reject('Method not implemented')
-    });
+  async list(): Promise<string []>{
+    const queues: string [] = await this.rsmq.listQueues()
+    return queues
   }
 
   async clear(): Promise<void> {

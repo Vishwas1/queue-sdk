@@ -5,6 +5,8 @@ const url = "http://127.0.0.1:6379"
 
 const QueueConfig = new QueueSdk(QTYPE.REDIS, url);
 const NEWQUEUE = QueueConfig.getQueue("READY", 5); 
+const RETRYQ = QueueConfig.getQueue("RETRYQ"); 
+const SUCCESSQ = QueueConfig.getQueue("SUCCESSQ"); 
 // the second param is delay (in seconds)
 // The time in seconds that the delivery of all new messages in the queue will be delayed. Allowed values: 0-9999999 (around 115 days)
 
@@ -18,6 +20,9 @@ const test = async () => {
     }catch(e){
 
     }
+
+    await RETRYQ.push(body)
+    await SUCCESSQ.push(body)
   
     let mid = await NEWQUEUE.push(body)
     console.log(mid)
