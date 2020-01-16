@@ -7,10 +7,12 @@ export class RedisQueue implements IQueue {
   rsmq: RSMQPromise;
   qchannels: Object;
   channel: string;
-  constructor(host: string, port: string, channel: string){
+  delay: number;
+  constructor(host: string, port: string, channel: string, delay: number = 0){
     this.rsmq = Connection.get(host, port, QTYPE.REDIS)
     this.channel = channel;
     this.qchannels = {};
+    this.delay = delay;
   }
 
   private async checkIfQueuePresent() : Promise<boolean> {
@@ -31,7 +33,7 @@ export class RedisQueue implements IQueue {
   }
 
   async create(): Promise<void> {
-    await this.rsmq.createQueue({qname: this.channel, maxsize: -1 })
+    await this.rsmq.createQueue({qname: this.channel, maxsize: -1, delay: this.delay})
     console.log(`${this.channel} created`)
   }
 

@@ -38,7 +38,7 @@ class QueueSdk{
   /**
    * Returns an instance of REDIS | SIMPLE | KAFKA queue
    */
-  public getQueue<T>(channel: string): RedisQueue | SimpleQueue | KafkaQueue {
+  public getQueue<T>(channel: string, delay? : number): RedisQueue | SimpleQueue | KafkaQueue {
     switch(this.qtype){
       case QTYPE.SIMPLE:{
         return new SimpleQueue()
@@ -47,7 +47,7 @@ class QueueSdk{
         return new KafkaQueue()
       }
       case QTYPE.REDIS:{        
-        return new RedisQueue(this.host, this.port, channel);
+        return new RedisQueue(this.host, this.port, channel, delay);
       }
       default: return new SimpleQueue()
     }
